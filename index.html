@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" href="data:," />
+<title>TVM Calculator — Understand How Your Money Grows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark">₹</span>
+        <div class="brand-text">
+          <p class="brand-name">TVM Calculator</p>
+          <p class="brand-tag">Understand how your money grows over time.</p>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="#calculator">Calculator</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ CALCULATOR SECTION ============ -->
+    <section class="calculator-section" id="calculator">
+      <div class="section-intro">
+        <h1 id="calc-title">Time Value of Money Calculator</h1>
+        <p id="calc-subtitle">Pick a calculation, fill in three or four numbers, and see exactly how your money moves through time — with the table and chart to back it up.</p>
+      </div>
+
+      <!-- Domain switcher: TVM calculations vs. the standalone EMI calculator -->
+      <div class="domain-switch" id="domain-switch" role="tablist" aria-label="Calculator type">
+        <button class="domain-btn is-active" data-domain="tvm" role="tab" aria-selected="true" type="button">Time Value of Money</button>
+        <button class="domain-btn" data-domain="emi" role="tab" aria-selected="false" type="button">EMI Calculator</button>
+      </div>
+
+      <!-- Calculation type tabs (TVM domain only) -->
+      <div class="calc-tabs" id="calc-tabs" role="tablist" aria-label="Calculation type">
+        <button class="tab-btn is-active" data-type="fv" role="tab" aria-selected="true">Future Value</button>
+        <button class="tab-btn" data-type="pv" role="tab" aria-selected="false">Present Value</button>
+        <button class="tab-btn" data-type="ci" role="tab" aria-selected="false">Compound Interest</button>
+        <button class="tab-btn" data-type="si" role="tab" aria-selected="false">Simple Interest</button>
+        <button class="tab-btn" data-type="fva" role="tab" aria-selected="false">FV of Annuity</button>
+        <button class="tab-btn" data-type="pva" role="tab" aria-selected="false">PV of Annuity</button>
+        <button class="tab-btn" data-type="amort" role="tab" aria-selected="false">Loan Amortization</button>
+        <button class="tab-btn" data-type="scenario" role="tab" aria-selected="false">Scenario Analysis</button>
+      </div>
+
+      <div class="calc-layout">
+        <!-- Input card -->
+        <div class="calc-card">
+          <form id="calc-form" novalidate>
+            <div id="input-fields" class="input-fields"><!-- populated by script.js --></div>
+
+            <p class="form-error" id="form-error" role="alert" aria-live="polite"></p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="calculate-btn">Calculate</button>
+              <button type="button" class="btn btn-secondary" id="reset-btn">Reset</button>
+            </div>
+          </form>
+
+          <div class="formula-box">
+            <button class="formula-toggle" id="formula-toggle" aria-expanded="false">
+              <span>How was this calculated?</span>
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="formula-content" id="formula-content" hidden>
+              <p class="formula-expr" id="formula-expr">FV = PV × (1 + r)ⁿ</p>
+              <ul class="formula-legend" id="formula-legend"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result card -->
+        <aside class="result-card" id="result-card">
+          <div class="result-empty" id="result-empty">
+            <p class="result-empty-mark">₹</p>
+            <p class="result-empty-title">No result yet</p>
+            <p class="result-empty-text">Fill in the inputs and press Calculate to see your figure here.</p>
+          </div>
+
+          <div class="result-content" id="result-content" hidden>
+            <p class="result-flag" id="result-flag">Calculation completed</p>
+            <p class="result-label" id="result-label">Your Result</p>
+            <p class="result-value" id="result-value">₹0.00</p>
+            <p class="result-kind" id="result-kind">Future Value</p>
+            <p class="result-sentence" id="result-sentence"></p>
+
+            <dl class="result-stats" id="result-stats"><!-- populated by script.js --></dl>
+
+            <button class="btn btn-copy" id="copy-btn" type="button">Copy result</button>
+            <button class="btn btn-copy btn-link-schedule" id="amort-link-btn" type="button" hidden>View full amortization schedule</button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Table + Chart -->
+      <div class="table-chart-grid" id="table-chart-grid" hidden>
+        <div class="table-card">
+          <div class="card-head">
+            <h3 id="table-title">Year-by-year growth</h3>
+            <div class="schedule-toggle" id="schedule-toggle" hidden>
+              <button class="toggle-btn is-active" data-view="yearly" type="button">Yearly</button>
+              <button class="toggle-btn" data-view="monthly" type="button">Monthly</button>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table id="growth-table">
+              <thead id="growth-table-head"></thead>
+              <tbody id="growth-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-head">
+            <h3 id="chart-title">Investment growth over time</h3>
+          </div>
+          <canvas id="growth-chart" width="600" height="320" role="img" aria-label="Chart of value over time"></canvas>
+          <div class="chart-legend" id="chart-legend" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS SECTION ============ -->
+    <section class="how-section" id="how-it-works">
+      <div class="section-intro">
+        <h2>What is Time Value of Money?</h2>
+        <p>Money available today can be worth more than the same amount in the future, because today's money can be invested and earn returns over time.</p>
+      </div>
+
+      <div class="flow-diagram">
+        <div class="flow-step">
+          <span class="flow-index">Today</span>
+          <p class="flow-title">Present Value</p>
+          <p class="flow-text">The amount you start with, or the value you place on money right now.</p>
+        </div>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step">
+          <span class="flow-index">Invested</span>
+          <p class="flow-title">Investment</p>
+          <p class="flow-text">That amount is put to work over a number of periods.</p>
+        </div>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step">
+          <span class="flow-index">Earned</span>
+          <p class="flow-title">Interest</p>
+          <p class="flow-text">Returns accumulate — and, with compounding, start earning on themselves.</p>
+        </div>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step">
+          <span class="flow-index">Later</span>
+          <p class="flow-title">Future Value</p>
+          <p class="flow-text">What that money has grown into by the end of the period.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT SECTION ============ -->
+    <section class="about-section" id="about">
+      <div class="about-card">
+        <h2>About this tool</h2>
+        <p>This calculator was built as a college mini-project to demonstrate the core ideas of Time Value of Money — future value, present value, compounding, annuities, and loan repayment — using plain HTML, CSS, and JavaScript, with no frameworks or backend.</p>
+        <p class="about-note">All figures are for educational demonstration only and should not be used as financial advice.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>TVM Calculator · Built with HTML, CSS &amp; JavaScript</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

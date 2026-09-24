@@ -1,0 +1,617 @@
+/* =========================================================
+   TVM CALCULATOR — STYLESHEET
+   Design tokens live in :root and drive every component below.
+   ========================================================= */
+
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+:root {
+  /* Colour */
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-sunken: #f1efe9;
+  --text-primary: #1c2430;
+  --text-secondary: #66707d;
+  --text-muted: #9aa2ac;
+  --border: #e4e1d8;
+  --border-strong: #d3cfc2;
+  --accent: #0f6e5c;
+  --accent-dark: #0a5445;
+  --accent-soft: #e3f1ec;
+  --danger: #c1443b;
+  --danger-soft: #fbeae8;
+
+  /* Typography */
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Newsreader", "Georgia", serif;
+
+  /* Spacing scale (4px base) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* Radius & shadow */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(28, 36, 48, 0.04), 0 8px 24px rgba(28, 36, 48, 0.06);
+  --shadow-pop: 0 4px 10px rgba(15, 110, 92, 0.18);
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181d;
+    --surface: #1c2128;
+    --surface-sunken: #22282f;
+    --text-primary: #eef1f3;
+    --text-secondary: #a3adb8;
+    --text-muted: #6f7986;
+    --border: #2c333c;
+    --border-strong: #3a4149;
+    --accent: #2bb894;
+    --accent-dark: #7fe0c4;
+    --accent-soft: #1f3a34;
+    --danger: #e5766c;
+    --danger-soft: #3a2422;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181d;
+  --surface: #1c2128;
+  --surface-sunken: #22282f;
+  --text-primary: #eef1f3;
+  --text-secondary: #a3adb8;
+  --text-muted: #6f7986;
+  --border: #2c333c;
+  --border-strong: #3a4149;
+  --accent: #2bb894;
+  --accent-dark: #7fe0c4;
+  --accent-soft: #1f3a34;
+  --danger: #e5766c;
+  --danger-soft: #3a2422;
+}
+
+/* =========================================================
+   RESET & BASE
+   ========================================================= */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 500; color: var(--text-primary); }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+
+a { color: inherit; }
+
+::selection { background: var(--accent-soft); color: var(--accent-dark); }
+
+/* Accessible focus ring, kept visible everywhere */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--sp-4) var(--sp-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.brand { display: flex; align-items: center; gap: var(--sp-3); }
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.brand-name { font-size: 17px; font-weight: 600; font-family: var(--font-body); }
+.brand-tag { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+.site-nav { display: flex; gap: var(--sp-5); }
+.site-nav a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.site-nav a:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+/* =========================================================
+   SHARED SECTION LAYOUT
+   ========================================================= */
+main { max-width: 1120px; margin: 0 auto; padding: 0 var(--sp-5); }
+
+section { padding: var(--sp-8) 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+
+.section-intro { max-width: 620px; margin: 0 auto var(--sp-6); text-align: center; }
+.section-intro h1 { font-size: 34px; margin-bottom: var(--sp-3); }
+.section-intro h2 { font-size: 28px; margin-bottom: var(--sp-3); }
+.section-intro p { color: var(--text-secondary); font-size: 15.5px; }
+
+/* =========================================================
+   TABS
+   ========================================================= */
+.calc-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  justify-content: center;
+  margin-bottom: var(--sp-6);
+}
+
+.tab-btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: 999px;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.tab-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+.tab-btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* =========================================================
+   CALCULATOR LAYOUT (input card + result card)
+   ========================================================= */
+.calc-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.calc-card, .result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--sp-6);
+}
+
+/* ---- Input fields ---- */
+.input-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+.field { display: flex; flex-direction: column; gap: var(--sp-1); }
+.field.field-wide { grid-column: 1 / -1; }
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.field .field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: -2px;
+}
+
+.field-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-input-wrap .unit {
+  position: absolute;
+  right: var(--sp-3);
+  font-size: 13px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.field input, .field select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  padding: 10px var(--sp-3);
+  font-size: 14.5px;
+  color: var(--text-primary);
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  font-variant-numeric: tabular-nums;
+}
+
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field input.has-unit { padding-right: var(--sp-6); }
+
+.field input.is-invalid { border-color: var(--danger); background: var(--danger-soft); }
+
+.field-error {
+  font-size: 12px;
+  color: var(--danger);
+  min-height: 14px;
+}
+
+/* ---- Form actions ---- */
+.form-error {
+  font-size: 13px;
+  color: var(--danger);
+  margin: 0 0 var(--sp-3);
+  min-height: 0;
+}
+.form-error:empty { display: none; }
+
+.form-actions { display: flex; gap: var(--sp-3); }
+
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px var(--sp-5);
+  font-size: 14.5px;
+  font-weight: 600;
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease), background 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  flex: 1;
+}
+.btn-primary:hover:not(:disabled) { background: var(--accent-dark); box-shadow: var(--shadow-pop); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+/* ---- Formula box ---- */
+.formula-box { margin-top: var(--sp-5); border-top: 1px solid var(--border); padding-top: var(--sp-4); }
+
+.formula-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: var(--sp-1) 0;
+}
+
+.chevron { transition: transform 0.2s var(--ease); color: var(--text-secondary); }
+.formula-toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+.formula-content { padding-top: var(--sp-4); }
+
+.formula-expr {
+  font-family: var(--font-display);
+  font-size: 22px;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+.formula-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2); }
+.formula-legend li { font-size: 13.5px; color: var(--text-secondary); }
+.formula-legend b { color: var(--text-primary); font-weight: 600; }
+
+/* ---- Result card ---- */
+.result-card { display: flex; flex-direction: column; min-height: 100%; }
+
+.result-empty { margin: auto; text-align: center; padding: var(--sp-6) 0; }
+.result-empty-mark {
+  width: 44px; height: 44px; margin: 0 auto var(--sp-3);
+  display: grid; place-items: center;
+  border-radius: 50%; background: var(--surface-sunken);
+  font-family: var(--font-display); font-size: 20px; color: var(--text-muted);
+}
+.result-empty-title { font-weight: 600; margin-bottom: var(--sp-1); }
+.result-empty-text { font-size: 13.5px; color: var(--text-secondary); max-width: 220px; margin: 0 auto; }
+
+.result-content { animation: result-in 0.35s var(--ease); }
+@keyframes result-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.result-flag {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: var(--sp-4);
+}
+
+.result-label { font-size: 13px; color: var(--text-secondary); margin-bottom: var(--sp-1); }
+.result-value { font-family: var(--font-display); font-size: 40px; line-height: 1.1; color: var(--accent-dark); font-variant-numeric: tabular-nums; word-break: break-word; }
+.result-kind { font-size: 13.5px; color: var(--text-secondary); margin-top: var(--sp-1); margin-bottom: var(--sp-4); }
+
+.result-sentence {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-4);
+}
+
+.result-stats { display: grid; gap: var(--sp-3); margin: 0 0 var(--sp-5); }
+.result-stats div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-2); }
+.result-stats dt { font-size: 13px; color: var(--text-secondary); }
+.result-stats dd { margin: 0; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+
+.btn-copy {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 10px var(--sp-4);
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-top: auto;
+}
+.btn-copy:hover { border-color: var(--accent); color: var(--accent-dark); }
+.btn-copy.is-copied { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-soft); }
+
+/* =========================================================
+   TABLE + CHART
+   ========================================================= */
+.table-chart-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--sp-5);
+  margin-top: var(--sp-6);
+}
+
+.table-card, .chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--sp-5);
+}
+
+.table-card h3, .chart-card h3 { font-size: 15.5px; font-weight: 600; font-family: var(--font-body); margin-bottom: 0; }
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.schedule-toggle { display: flex; gap: 4px; background: var(--surface-sunken); padding: 3px; border-radius: 999px; }
+
+.toggle-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.toggle-btn.is-active { background: var(--surface); color: var(--accent-dark); box-shadow: 0 1px 2px rgba(28, 36, 48, 0.08); }
+
+.chart-legend { display: flex; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-3); }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+.table-scroll { overflow-x: auto; }
+
+#growth-table { font-size: 13.5px; min-width: 420px; }
+#growth-table th, #growth-table td {
+  text-align: right;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+#growth-table th:first-child, #growth-table td:first-child { text-align: left; }
+#growth-table thead th { color: var(--text-secondary); font-weight: 600; font-size: 12px; text-transform: none; border-bottom: 1px solid var(--border-strong); }
+#growth-table tbody tr:last-child td { font-weight: 700; color: var(--accent-dark); }
+#growth-table tbody tr:hover { background: var(--surface-sunken); }
+
+#growth-chart { width: 100%; height: auto; display: block; }
+
+/* =========================================================
+   HOW IT WORKS — flow diagram
+   ========================================================= */
+.flow-diagram {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.flow-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  width: 220px;
+  box-shadow: var(--shadow-card);
+}
+
+.flow-index { font-size: 11.5px; font-weight: 600; color: var(--accent-dark); background: var(--accent-soft); padding: 3px 8px; border-radius: 999px; }
+.flow-title { font-family: var(--font-body); font-size: 14.5px; font-weight: 700; margin: var(--sp-3) 0 var(--sp-1); }
+.flow-text { font-size: 13px; color: var(--text-secondary); }
+
+.flow-arrow { align-self: center; color: var(--text-muted); font-size: 20px; }
+
+/* =========================================================
+   ABOUT
+   ========================================================= */
+.about-card {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+.about-card h2 { margin-bottom: var(--sp-4); font-size: 26px; }
+.about-card p { color: var(--text-secondary); font-size: 14.5px; margin-bottom: var(--sp-3); }
+.about-note { font-size: 12.5px; color: var(--text-muted); font-style: italic; }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.site-footer {
+  text-align: center;
+  padding: var(--sp-5);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 880px) {
+  .calc-layout { grid-template-columns: 1fr; }
+  .table-chart-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .header-inner { padding: var(--sp-4); }
+  main { padding: 0 var(--sp-4); }
+  section { padding: var(--sp-7) 0; }
+  .section-intro h1 { font-size: 27px; }
+  .section-intro h2 { font-size: 22px; }
+  .input-fields { grid-template-columns: 1fr; }
+  .form-actions { flex-direction: column; }
+  .btn-secondary { order: 2; }
+  .result-value { font-size: 32px; }
+  .flow-step { width: 100%; }
+  .flow-arrow { transform: rotate(90deg); }
+  .site-nav { gap: var(--sp-4); }
+}
+
+
+/* ---- EMI: principal vs interest split ---- */
+.split { margin: 0 0 var(--sp-4); }
+.split-track { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--border); }
+.split-principal { background: var(--accent); }
+.split-interest { background: #c9922f; }
+.split-legend { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-2); }
+
+
+/* =========================================================
+   DOMAIN SWITCH (Time Value of Money  |  EMI Calculator)
+   ========================================================= */
+[hidden] { display: none !important; }
+
+.domain-switch {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  gap: 4px;
+  margin: 0 auto var(--sp-5);
+  padding: 4px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.domain-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px var(--sp-5);
+  border-radius: 999px;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.domain-btn:hover { color: var(--text-primary); }
+
+.domain-btn.is-active {
+  background: var(--surface);
+  color: var(--accent-dark);
+  box-shadow: 0 1px 3px rgba(28, 36, 48, 0.14);
+}
+
+/* ---- EMI domain: chart only, full width ---- */
+.table-chart-grid.chart-only { grid-template-columns: 1fr; }
+.table-chart-grid.chart-only .table-card { display: none; }
+
+.btn-link-schedule { margin-top: var(--sp-2); }
+
+@media (max-width: 620px) {
+  .domain-btn { padding: 9px var(--sp-4); font-size: 13px; }
+}
+
+/* Let the table/chart columns shrink so the wider 6-column schedule scrolls inside its card
+   instead of pushing the page sideways. */
+.table-card, .chart-card { min-width: 0; }
